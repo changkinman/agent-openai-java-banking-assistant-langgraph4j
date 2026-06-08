@@ -2,28 +2,37 @@
 package com.microsoft.openai.samples.assistant.config;
 
 
-import com.azure.ai.openai.OpenAIClient;
-
-import dev.langchain4j.model.azure.AzureOpenAiChatModel;
 import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.openai.OpenAiChatModel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.Duration;
+
 @Configuration
 public class Langchain4JConfiguration {
 
-    @Value("${openai.chatgpt.deployment}")
-    private String gptChatDeploymentModelId;
+    @Value("${deepseek.api.key}")
+    private String deepseekApiKey;
+
+    @Value("${deepseek.model.name:deepseek-chat}")
+    private String deepseekModelName;
+
+    @Value("${deepseek.base.url:https://api.deepseek.com}")
+    private String deepseekBaseUrl;
 
     @Bean
-    public ChatLanguageModel chatLanguageModel(OpenAIClient azureOpenAICLient) {
+    public ChatLanguageModel chatLanguageModel() {
 
-        return AzureOpenAiChatModel.builder()
-                .openAIClient(azureOpenAICLient)
-                .deploymentName(gptChatDeploymentModelId)
+        return OpenAiChatModel.builder()
+                .apiKey(deepseekApiKey)
+                .modelName(deepseekModelName)
+                .baseUrl(deepseekBaseUrl)
                 .temperature(0.3)
-                .logRequestsAndResponses(true)
+                .timeout(Duration.ofSeconds(120))
+                .logRequests(true)
+                .logResponses(true)
                 .build();
     }
 

@@ -7,7 +7,7 @@ import com.microsoft.openai.samples.assistant.langchain4j.agent.mcp.AccountMCPAg
 import com.microsoft.openai.samples.assistant.langchain4j.agent.mcp.PaymentMCPAgent;
 import com.microsoft.openai.samples.assistant.langchain4j.agent.mcp.TransactionHistoryMCPAgent;
 import com.microsoft.openai.samples.assistant.proxy.BlobStorageProxy;
-import dev.langchain4j.model.azure.AzureOpenAiChatModel;
+import dev.langchain4j.model.openai.OpenAiChatModel;
 import org.bsc.langgraph4j.CompileConfig;
 import org.bsc.langgraph4j.CompiledGraph;
 import org.bsc.langgraph4j.GraphStateException;
@@ -40,12 +40,13 @@ public class AgentWorkflowBuilder {
 
     public StateGraph<AgentWorkflowState> graph() throws GraphStateException {
 
-        var model = AzureOpenAiChatModel.builder()
-                .apiKey(System.getenv("AZURE_OPENAI_KEY"))
-                .endpoint(System.getenv("AZURE_OPENAI_ENDPOINT"))
-                .deploymentName(System.getenv("AZURE_OPENAI_DEPLOYMENT_NAME"))
+        var model = OpenAiChatModel.builder()
+                .apiKey(System.getenv("DEEPSEEK_API_KEY"))
+                .modelName("deepseek-chat")
+                .baseUrl("https://api.deepseek.com")
                 .temperature(0.3)
-                .logRequestsAndResponses(true)
+                .logRequests(true)
+                .logResponses(true)
                 .build();
 
         var accountUserName = "bob.user@contoso.com";
